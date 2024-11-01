@@ -2,7 +2,7 @@
 import { useFetch } from '@vueuse/core'
 import { computed, ref } from 'vue'
 import type { Ask } from '@/types/Ask'
-import { timeDifferene } from '@/utils/time'
+import { timeDifference } from '@/utils/time'
 
 // set props
 interface Props {
@@ -41,7 +41,7 @@ const countCommet = computed(() => {
 })
 
 const creatTime = computed(() => {
-  return timeDifferene(time.value)
+  return timeDifference(time.value)
 })
 </script>
 

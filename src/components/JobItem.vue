@@ -2,7 +2,7 @@
 import { useFetch } from '@vueuse/core'
 import { computed, ref } from 'vue'
 import type { Jobs } from '@/types/Jobs'
-import { timeDifferene } from '@/utils/time'
+import { timeDifference } from '@/utils/time'
 
 // set props
 interface Props {
@@ -37,7 +37,7 @@ const getDomainName = computed(() => {
 })
 
 const creatTime = computed(() => {
-  return timeDifferene(time.value)
+  return timeDifference(time.value)
 })
 
 const isValidUrl = computed(() => {

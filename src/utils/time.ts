@@ -1,6 +1,6 @@
 import moment from 'moment'
 
-export const timeDifferene = (createTime: number): string => {
+export const timeDifference = (createTime: number): string => {
   const cTime = moment()
   const nTime = moment.unix(createTime)
 

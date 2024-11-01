@@ -2,7 +2,7 @@
 import { useFetch } from '@vueuse/core'
 import { computed, ref } from 'vue'
 import type { Comment } from '@/types/Comment'
-import { timeDifferene } from '@/utils/time'
+import { timeDifference } from '@/utils/time'
 import NewsLoader from '@/components/NewsLoader.vue'
 import CommentsCom from '@/components/CommentsCom.vue'
 
@@ -18,7 +18,7 @@ const { data: resp } = await useFetch(`https://hacker-news.firebaseio.com/v0/ite
 const news = ref<Comment>(JSON.parse(resp.value as string))
 
 const countTimedif = computed(() => {
-  return timeDifferene(news.value.time)
+  return timeDifference(news.value.time)
 })
 
 const ttlComment = computed(() => {

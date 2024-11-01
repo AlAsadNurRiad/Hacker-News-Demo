@@ -2,7 +2,7 @@
 import { useFetch } from '@vueuse/core'
 import { computed, ref } from 'vue'
 import type { User } from '@/types/User'
-import { timeDifferene } from '@/utils/time'
+import { timeDifference } from '@/utils/time'
 
 // set props
 interface Props {
@@ -17,7 +17,7 @@ const karma = ref(0)
 const time = ref(0)
 
 const coutDif = computed(() => {
-  return timeDifferene(time.value)
+  return timeDifference(time.value)
 })
 
 const { data: resp } = await useFetch(`https://hacker-news.firebaseio.com/v0/user/${props.userid}.json?print=pretty`)
