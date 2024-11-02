@@ -15,4 +15,3 @@ import { ContentLoader } from 'vue-content-loader'
     <rect x="150" y="22" rx="0" ry="0" width="100" height="5" />
   </ContentLoader>
 </template>
-

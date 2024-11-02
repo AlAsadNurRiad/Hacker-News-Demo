@@ -3,7 +3,9 @@ import { computed, defineAsyncComponent } from 'vue'
 import { useRoute } from 'vue-router'
 
 const User = defineAsyncComponent(() => import('@/components/User.vue'))
-const UserLoader = defineAsyncComponent(() => import('@/components/UserLoader.vue'))
+const UserLoader = defineAsyncComponent(
+  () => import('@/components/loader/UserLoader.vue'),
+)
 
 const route = useRoute()
 const userId = computed(() => {

@@ -51,10 +51,10 @@ const routeName = computed(() => Array.isArray(route.params.type) ? route.params
           Ask
         </RouterLink>
         <RouterLink
-          to="/jobs" class="hover:text-white hover:font-semibold"
+          to="/job" class="hover:text-white hover:font-semibold"
           :class="{ underline: routeName === 'job' }"
         >
-          Jobs
+          Job
         </RouterLink>
       </div>
     </div>
