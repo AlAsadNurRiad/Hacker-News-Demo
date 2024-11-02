@@ -3,7 +3,7 @@ import { useFetch } from '@vueuse/core'
 import { computed, ref } from 'vue'
 import type { Comment } from '@/types/Comment'
 import { timeDifference } from '@/utils/time'
-import NewsLoader from '@/components/NewsLoader.vue'
+import NewsLoader from '@/components/loader/NewsLoader.vue'
 import CommentsCom from '@/components/CommentsCom.vue'
 
 // set props
@@ -14,7 +14,9 @@ const props = withDefaults(defineProps<Props>(), {
   id: NaN,
 })
 
-const { data: resp } = await useFetch(`https://hacker-news.firebaseio.com/v0/item/${props.id}.json?print=pretty`)
+const { data: resp } = await useFetch(
+  `https://hacker-news.firebaseio.com/v0/item/${props.id}.json?print=pretty`,
+)
 const news = ref<Comment>(JSON.parse(resp.value as string))
 
 const countTimedif = computed(() => {
@@ -41,17 +43,20 @@ const kids = computed(() => {
   <div class="bg-white px-5 pt-5 pb-2 text-sm">
     <p class="mb-2 border-b">
       <RouterLink :to="`/user/${news.by || '-'}`">
-        <span class="hover:underline text-orange-600">{{ news.by || '-' }}</span>
+        <span class="hover:underline text-orange-600">{{
+          news.by || '-'
+        }}</span>
       </RouterLink>
       | {{ countTimedif }} |
       <span>{{ ttlComment }} Comment</span>
     </p>
-    <div class="text-xs text-slate-600 " v-html="commnetData" />
-    <div v-if="(ttlComment > 1)" class="text-xs text-orange-600 pt-2 cursor-pointer hover:underline">
-      <p v-if="showReply" @click="(showReply = !showReply)">
-        Hide Comment [-]
-      </p>
-      <p v-else @click="(showReply = !showReply)">
+    <div class="text-xs text-slate-600" v-html="commnetData" />
+    <div
+      v-if="ttlComment > 1"
+      class="text-xs text-orange-600 pt-2 cursor-pointer hover:underline"
+    >
+      <p v-if="showReply" @click="showReply = !showReply">Hide Comment [-]</p>
+      <p v-else @click="showReply = !showReply">
         Show Reply {{ ttlComment }} [+]
       </p>
     </div>

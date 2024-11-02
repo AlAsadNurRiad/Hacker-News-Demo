@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useQuery } from '@tanstack/vue-query'
 import axios from 'axios'
-import NewsLoader from './NewsLoader.vue'
+import NewsLoader from '../loader/NewsLoader.vue'
 import type { News } from '@/types/News'
 import { countComment, getDomainName, timeDifference } from '@/utils'
 
@@ -16,7 +16,9 @@ const props = withDefaults(defineProps<Props>(), {
 const { data: news, isPending } = useQuery<News>({
   queryKey: ['topNews', props.id],
   queryFn: async () => {
-    const resp = await axios.get((`https://hacker-news.firebaseio.com/v0/item/${props.id}.json?print=pretty`))
+    const resp = await axios.get(
+      `https://hacker-news.firebaseio.com/v0/item/${props.id}.json?print=pretty`,
+    )
     return resp.data
   },
   enabled: !!props.id,
@@ -32,45 +34,56 @@ const { data: news, isPending } = useQuery<News>({
         {{ news.score }}
       </p>
     </div>
-    <div class="flex flex-col justify-center sm:overflow-hidden sm:truncate my-4 sm:my-0">
-      <div class="flex items-center font-mono space-x-1 ">
+    <div
+      class="flex flex-col justify-center sm:overflow-hidden sm:truncate my-4 sm:my-0"
+    >
+      <div class="flex items-center font-mono space-x-1">
         <a
           :href="news.url"
-          target="_blank" class="text-sm  sm:text-base sm:truncate  font-medium hover:decoration-orange-500 "
+          target="_blank"
+          class="text-sm sm:text-base sm:truncate font-medium hover:decoration-orange-500"
           :class="{ 'hover:underline': Boolean(getDomainName(news.url)) }"
         >
           {{ news.title }}
         </a>
-        <p v-if="Boolean(getDomainName(news.url))" class="hidden sm:block sm:truncate text-xs sm:text-sm text-slate-500">
+        <p
+          v-if="Boolean(getDomainName(news.url))"
+          class="hidden sm:block sm:truncate text-xs sm:text-sm text-slate-500"
+        >
           ({{ getDomainName(news.url) }})
         </p>
       </div>
-      <div class="flex text-xs sm:text-sm text-slate-500  ">
+      <div class="flex text-xs sm:text-sm text-slate-500">
         <router-link :to="`/user/${news.by}`">
-          by <span class="underline sm:no-underline sm:hover:underline hover:decoration-orange-500">{{ news.by }}</span>
+          by
+          <span
+            class="underline sm:no-underline sm:hover:underline hover:decoration-orange-500"
+            >{{ news.by }}</span
+          >
         </router-link>
-        <p class="px-1 sm:px-4">
-          |
-        </p>
+        <p class="px-1 sm:px-4">|</p>
         <router-link :to="`/news/${id}`">
-          <p class="underline sm:no-underline sm:hover:underline hover:decoration-orange-500">
+          <p
+            class="underline sm:no-underline sm:hover:underline hover:decoration-orange-500"
+          >
             {{ countComment(news.kids) }}
           </p>
         </router-link>
-        <p class="px-1 sm:px-4">
-          |
+        <p class="px-1 sm:px-4">|</p>
+        <p>
+          <span class="hidden sm:inline">created</span>
+          {{ timeDifference(news.time) }}
         </p>
-        <p><span class="hidden sm:inline">created</span> {{ timeDifference(news.time) }}</p>
       </div>
     </div>
   </div>
   <div v-else>
-    Something went wrong
+    <p>Something went wrong</p>
   </div>
 </template>
 
 <style scoped>
-.card-layout{
+.card-layout {
   display: grid;
   grid-template-columns: 1fr 11fr;
 }

@@ -1,12 +1,20 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import NewsLoader from '@/components/NewsLoader.vue'
+import NewsLoader from '@/components/loader/NewsLoader.vue'
 
-const NewsItems = defineAsyncComponent(() => import('@/components/NewsItems.vue'))
-const ShowItem = defineAsyncComponent(() => import('@/components/ShowItem.vue'))
-const AskItem = defineAsyncComponent(() => import('../components/AskItem.vue'))
-const CommentsCom = defineAsyncComponent(() => import('@/components/CommentsCom.vue'))
+const NewsItems = defineAsyncComponent(
+  () => import('@/components/news/NewsItems.vue'),
+)
+const ShowItem = defineAsyncComponent(
+  () => import('@/components/news/ShowItem.vue'),
+)
+const AskItem = defineAsyncComponent(
+  () => import('../components/news/AskItem.vue'),
+)
+const CommentsCom = defineAsyncComponent(
+  () => import('@/components/CommentsCom.vue'),
+)
 
 const route = useRoute()
 const newid = computed(() => {
@@ -16,10 +24,8 @@ const newid = computed(() => {
 })
 
 const detailsPageType = computed(() => {
-  if (route.path.includes('/ask/'))
-    return 'ask'
-  else if (route.path.includes('/show/'))
-    return 'show'
+  if (route.path.includes('/ask/')) return 'ask'
+  else if (route.path.includes('/show/')) return 'show'
   else return 'news'
 })
 
@@ -39,7 +45,11 @@ const setText = (val: string) => {
     <div class="bg-white">
       <Suspense>
         <template #default>
-          <ShowItem v-if="detailsPageType === 'show'" :id="newid" @kids="setKids" />
+          <ShowItem
+            v-if="detailsPageType === 'show'"
+            :id="newid"
+            @kids="setKids"
+          />
           <div v-else-if="detailsPageType === 'ask'">
             <AskItem :id="newid" @kids="setKids" @text="setText" />
             <div class="text-xs text-slate-600 p-5" v-html="text" />
