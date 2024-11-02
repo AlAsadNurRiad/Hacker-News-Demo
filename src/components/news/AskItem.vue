@@ -4,6 +4,7 @@ import axios from 'axios'
 import NewsLoader from '../loader/NewsLoader.vue'
 import type { Ask } from '@/types/Ask'
 import { countComment, timeDifference } from '@/utils'
+import { useRoute } from 'vue-router'
 
 // set props
 interface Props {
@@ -13,8 +14,12 @@ const props = withDefaults(defineProps<Props>(), {
   id: NaN,
 })
 
+const route = useRoute()
+const newsType = Array.isArray(route.params.type)
+  ? route.params.type[0]
+  : route.params.type || 'top'
 const { data: ask, isPending } = useQuery<Ask>({
-  queryKey: ['jobItem', props.id],
+  queryKey: [newsType, props.id],
   queryFn: async () => {
     const resp = await axios.get(
       `https://hacker-news.firebaseio.com/v0/item/${props.id}.json?print=pretty`,

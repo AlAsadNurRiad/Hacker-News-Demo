@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const { data: show, isPending } = useQuery<Show>({
-  queryKey: ['jobItem', props.id],
+  queryKey: ['showItem', props.id],
   queryFn: async () => {
     const resp = await axios.get(
       `https://hacker-news.firebaseio.com/v0/item/${props.id}.json?print=pretty`,
