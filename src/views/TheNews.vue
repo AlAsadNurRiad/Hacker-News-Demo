@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, ref, watch } from 'vue'
-import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router'
-import { useNewStore } from '@/stores/news'
 import NewsLoader from '@/components/NewsLoader.vue'
 import { getNews } from '@/query/news'
 

@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { useQuery } from '@tanstack/vue-query'
 import axios from 'axios'
+import NewsLoader from './NewsLoader.vue'
 import type { News } from '@/types/News'
-import { timeDifference } from '@/utils/time'
+import { countComment, getDomainName, timeDifference } from '@/utils'
 
 // set props
 interface Props {
@@ -12,7 +13,7 @@ const props = withDefaults(defineProps<Props>(), {
   id: NaN,
 })
 
-const { data: news, isError, isPending } = useQuery<News>({
+const { data: news, isPending } = useQuery<News>({
   queryKey: ['topNews', props.id],
   queryFn: async () => {
     const resp = await axios.get((`https://hacker-news.firebaseio.com/v0/item/${props.id}.json?print=pretty`))
@@ -20,29 +21,10 @@ const { data: news, isError, isPending } = useQuery<News>({
   },
   enabled: !!props.id,
 })
-
-const getDomainName = (url: string) => {
-  if (url) {
-    const spUrl = url.split('/')
-    if (spUrl.length >= 3)
-      return spUrl[2]
-  }
-  return ''
-}
-
-const countComment = (kids: Array<unknown>) => {
-  if (kids?.length <= 1)
-    return `${kids?.length} Comment`
-  else if (kids?.length >= 1)
-    return `${kids?.length} Comments`
-  else return '0 Comment'
-}
 </script>
 
 <template>
-  <div v-if="isPending">
-    Pending ...
-  </div>
+  <NewsLoader v-if="isPending" />
   <div v-else-if="news" class="border-b-2 card-layout pr-3">
     <div class="flex justify-center items-center w-12 sm:w-20 p-5">
       <p class="text-center font-semibold text-[#f3621d] text-sm sm:text-xl">

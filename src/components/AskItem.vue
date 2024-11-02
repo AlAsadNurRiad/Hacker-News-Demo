@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { useFetch } from '@vueuse/core'
-import { computed, ref } from 'vue'
+import { useQuery } from '@tanstack/vue-query'
+import axios from 'axios'
+import NewsLoader from './NewsLoader.vue'
 import type { Ask } from '@/types/Ask'
-import { timeDifference } from '@/utils/time'
+import { countComment, timeDifference } from '@/utils'
 
 // set props
 interface Props {
@@ -12,68 +13,49 @@ const props = withDefaults(defineProps<Props>(), {
   id: NaN,
 })
 
-// set emet
+// set emit
 const emit = defineEmits(['kids', 'text'])
 
-const title = ref('no title')
-const score = ref(0)
-const author = ref('no author available')
-const text = ref('')
-const time = ref(0)
-
-const { data: resp } = await useFetch(`https://hacker-news.firebaseio.com/v0/item/${props.id}.json?print=pretty`)
-const news = ref<Ask>(JSON.parse(resp.value as string))
-
-title.value = news.value?.title
-score.value = news.value?.score
-author.value = news.value?.by
-time.value = news.value?.time
-
-emit('kids', news.value?.kids || [])
-emit('text', news.value?.text || '')
-
-const countCommet = computed(() => {
-  if (news.value?.kids?.length <= 1)
-    return `${news.value?.kids?.length} Comment`
-  else if (news.value?.kids?.length >= 1)
-    return `${news.value?.kids?.length} Comments`
-  else return '0 Comment'
-})
-
-const creatTime = computed(() => {
-  return timeDifference(time.value)
+const { data: ask, isPending } = useQuery<Ask>({
+  queryKey: ['jobItem', props.id],
+  queryFn: async () => {
+    const resp = await axios.get(`https://hacker-news.firebaseio.com/v0/item/${props.id}.json?print=pretty`)
+    return resp.data
+  },
+  enabled: !!props.id,
 })
 </script>
 
 <template>
-  <div class="border-b-2 card-layout">
+  <NewsLoader v-if="isPending" />
+  <div v-else-if="ask" class="border-b-2 card-layout">
     <div class="flex justify-center items-center w-12 sm:w-20 p-5">
       <p class="text-center font-semibold text-[#f3621d] text-sm sm:text-xl">
-        {{ score }}
+        {{ ask.score }}
       </p>
     </div>
     <div class="flex flex-col justify-center sm:overflow-hidden sm:truncate my-4 sm:my-0">
       <div class="flex items-center font-mono space-x-1 ">
         <router-link :to="`/ask/${id}`" class="text-sm  sm:text-base sm:truncate  font-medium hover:decoration-orange-500 hover:underline">
-          {{ title }}
+          {{ ask.title }}
         </router-link>
       </div>
       <div class="flex text-xs sm:text-sm text-slate-500  ">
-        <router-link :to="`/user/${author}`">
-          by <span class="underline sm:no-underline sm:hover:underline hover:decoration-orange-500">{{ author }}</span>
+        <router-link :to="`/user/${ask.by}`">
+          by <span class="underline sm:no-underline sm:hover:underline hover:decoration-orange-500">{{ ask.by }}</span>
         </router-link>
         <p class="px-1 sm:px-4">
           |
         </p>
         <router-link :to="`/ask/${id}`">
           <p class="underline sm:no-underline sm:hover:underline hover:decoration-orange-500">
-            {{ countCommet }}
+            {{ countComment(ask.kids) }}
           </p>
         </router-link>
         <p class="px-1 sm:px-4">
           |
         </p>
-        <p><span class="hidden sm:inline">created</span> {{ creatTime }}</p>
+        <p><span class="hidden sm:inline">created</span> {{ timeDifference(ask.time) }}</p>
       </div>
     </div>
   </div>
