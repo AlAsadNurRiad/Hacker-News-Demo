@@ -33,11 +33,9 @@ const detailsPageType = computed(() => {
 const newsType = Array.isArray(route.params.type)
   ? route.params.type[0]
   : route.params.type || 'top'
-const newsId = Array.isArray(route.params.newsid)
-  ? route.params.type[0]
-  : route.params.newsid || 'top'
+
 const { data, isPending } = useQuery<{ kids: Array<number> }>({
-  queryKey: [newsType, Number(newsId)],
+  queryKey: [newsType, newid],
 })
 
 const text = ref('')
