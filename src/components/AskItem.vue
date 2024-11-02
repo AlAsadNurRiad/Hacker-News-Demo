@@ -23,6 +23,7 @@ const { data: ask, isPending } = useQuery<Ask>({
     return resp.data
   },
   enabled: !!props.id,
+  staleTime: 300000,
 })
 </script>
 

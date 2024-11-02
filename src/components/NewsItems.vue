@@ -20,6 +20,7 @@ const { data: news, isPending } = useQuery<News>({
     return resp.data
   },
   enabled: !!props.id,
+  staleTime: 300000,
 })
 </script>
 

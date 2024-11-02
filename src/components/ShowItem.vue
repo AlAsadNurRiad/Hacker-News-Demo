@@ -15,13 +15,14 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits(['kids'])
 
-const { data: show, isError, isPending } = useQuery<Show>({
+const { data: show, isPending } = useQuery<Show>({
   queryKey: ['jobItem', props.id],
   queryFn: async () => {
     const resp = await axios.get((`https://hacker-news.firebaseio.com/v0/item/${props.id}.json?print=pretty`))
     return resp.data
   },
   enabled: !!props.id,
+  staleTime: 300000,
 })
 </script>
 

@@ -9,6 +9,6 @@ export const getNews = (type: MaybeRef<string>) => {
       const resp = await axios.get(`https://hacker-news.firebaseio.com/v0/${unref(type)}stories.json?print=pretty`)
       return resp.data
     },
-    staleTime: 5000,
+    staleTime: 30000,
   })
 }
